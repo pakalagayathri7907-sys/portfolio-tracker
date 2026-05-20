@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 
 
 st.title("Portfolio Tracker")
-st.page_link("pages/trade_net.py", label="Open Live TradeNet")
+st.sidebar.success("Open TradeNet from sidebar")
 
 
 # Load CSV
