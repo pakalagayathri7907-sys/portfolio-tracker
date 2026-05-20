@@ -88,18 +88,16 @@ if st.button("Go"):
         data["50 EMA"] = data["Close"].ewm(span=50).mean()
 
         # SUPPORT / RESISTANCE
-        support = float(data["Low"].min())
-        resistance = float(data["High"].max())
+        support = data["Low"].astype(float).min()
+        resistance = data["High"].astype(float).max()
 
         # PIVOT
-        pivot = float(
-            (
-                data["High"].mean() +
-                data["Low"].mean() +
-                data["Close"].mean()
-            ) / 3
-        )
-
+        pivot = (
+            data["High"].astype(float).mean() +
+            data["Low"].astype(float).mean() +
+            data["Close"].astype(float).mean()
+        ) / 3
+        
         # CHART
         fig = go.Figure()
 
