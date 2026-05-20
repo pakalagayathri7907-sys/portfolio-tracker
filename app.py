@@ -1,12 +1,17 @@
+
 import streamlit as st
 import pandas as pd
 import yfinance as yf
 import plotly.express as px
 from datetime import datetime
 
+
 st.set_page_config(layout="wide")
 
+
 st.title("Portfolio Tracker")
+st.page_link("pages/trade_net.py", label="Open Live TradeNet")
+
 
 # Load CSV
 df = pd.read_csv("portfolio.csv")
@@ -235,6 +240,6 @@ filtered_df = filtered_df[
 st.subheader("Portfolio Explorer")
 
 st.dataframe(
-    filtered_df,
+    filtered_df.reset_index(drop=True),
     use_container_width=True
 )
