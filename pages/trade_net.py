@@ -83,24 +83,20 @@ if st.button("Go"):
 
     else:
 
-        # FIX MULTIINDEX COLUMNS
-        data.columns = data.columns.get_level_values(0)
-
         # MOVING AVERAGES
         data["20 EMA"] = data["Close"].ewm(span=20).mean()
         data["50 EMA"] = data["Close"].ewm(span=50).mean()
 
-        # SUPPORT / RESISTANCE / PIVOT
-        support = float(data["Low"].min())
-        resistance = float(data["High"].max())
+        # SUPPORT / RESISTANCE
+        support = data["Low"].astype(float).min()
+        resistance = data["High"].astype(float).max()
 
-        pivot = float(
-            (
-                data["High"].mean() +
-                data["Low"].mean() +
-                data["Close"].mean()
-            ) / 3
-        )
+        # PIVOT
+        pivot = (
+            data["High"].astype(float).mean() +
+            data["Low"].astype(float).mean() +
+            data["Close"].astype(float).mean()
+        ) / 3
 
         # CHART
         fig = go.Figure()
@@ -109,11 +105,11 @@ if st.button("Go"):
         fig.add_trace(
             go.Candlestick(
                 x=data.index,
-                open=data["Open"],
-                high=data["High"],
-                low=data["Low"],
-                close=data["Close"],
-                name="Candlestick"
+                open=data['Open'].values.flatten(),
+                high=data['High'].values.flatten(),
+                low=data['Low'].values.flatten(),
+                close=data['Close'].values.flatten(),
+                name='Candlestick'
             )
         )
 
@@ -127,28 +123,26 @@ if st.button("Go"):
                 line=dict(color="blue")
             )
         )
-
         # SUPPORT LINE
         fig.add_hline(
-            y=support,
-            line_dash="dot",
-            line_color="green"
+          y=float(support),
+          line_dash="dot",
+          line_color="green"
         )
 
         # RESISTANCE LINE
         fig.add_hline(
-            y=resistance,
-            line_dash="dot",
-            line_color="red"
+          y=float(resistance),
+          line_dash="dot",
+          line_color="red"
         )
 
         # PIVOT LINE
         fig.add_hline(
-            y=pivot,
-            line_dash="dash",
-            line_color="orange"
-        )
-
+          y=float(pivot),
+          line_dash="dash",
+          line_color="orange"
+       )
         # BREAKDOWN SIGNALS
         breakdown = data[data["Close"] < pivot]
 
@@ -159,42 +153,21 @@ if st.button("Go"):
                 mode="markers+text",
                 text=breakdown["Low"].round(2),
                 textposition="bottom center",
+
                 marker=dict(
                     color="red",
                     size=12,
                     symbol="triangle-down"
                 ),
+
                 hovertemplate=
                 "<b>BREAKDOWN</b><br>" +
                 "Price: %{y}<br>" +
                 "Time: %{x}<extra></extra>",
+
                 name="Breakdown"
             )
         )
-
-        # BREAKOUT SIGNALS
-        breakout = data[data["Close"] > pivot]
-
-        fig.add_trace(
-            go.Scatter(
-                x=breakout.index,
-                y=breakout["High"],
-                mode="markers+text",
-                text=breakout["High"].round(2),
-                textposition="top center",
-                marker=dict(
-                    color="lime",
-                    size=12,
-                    symbol="triangle-up"
-                ),
-                hovertemplate=
-                "<b>BREAKOUT</b><br>" +
-                "Price: %{y}<br>" +
-                "Time: %{x}<extra></extra>",
-                name="Breakout"
-            )
-        )
-
         # LAYOUT
         fig.update_layout(
             height=850,
