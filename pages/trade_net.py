@@ -88,17 +88,15 @@ if st.button("Go"):
         data["50 EMA"] = data["Close"].ewm(span=50).mean()
 
         # SUPPORT / RESISTANCE
-        support = float(data["Low"].min())
-        resistance = float(data["High"].max())
+        support = data["Low"].min().min()
+        resistance = data["High"].max().max()
 
         # PIVOT
-        pivot = float(
-            (
-                data["High"].mean() +
-                data["Low"].mean() +
-                data["Close"].mean()
-            ) / 3
-        )
+        pivot = (
+            data["High"].mean().mean() +
+            data["Low"].mean().mean() +
+            data["Close"].mean().mean()
+        ) / 3
 
         # CHART
         fig = go.Figure()
@@ -157,18 +155,15 @@ if st.button("Go"):
                 mode="markers+text",
                 text=breakdown["Low"].round(2),
                 textposition="bottom center",
-
                 marker=dict(
                     color="red",
                     size=12,
                     symbol="triangle-down"
                 ),
-
                 hovertemplate=
                 "<b>BREAKDOWN</b><br>" +
                 "Price: %{y}<br>" +
                 "Time: %{x}<extra></extra>",
-
                 name="Breakdown"
             )
         )
