@@ -88,15 +88,17 @@ if st.button("Go"):
         data["50 EMA"] = data["Close"].ewm(span=50).mean()
 
         # SUPPORT / RESISTANCE
-        support = data["Low"].astype(float).min()
-        resistance = data["High"].astype(float).max()
+        support = float(data["Low"].min())
+        resistance = float(data["High"].max())
 
         # PIVOT
-        pivot = (
-            data["High"].astype(float).mean() +
-            data["Low"].astype(float).mean() +
-            data["Close"].astype(float).mean()
-        ) / 3
+        pivot = float(
+            (
+                data["High"].mean() +
+                data["Low"].mean() +
+                data["Close"].mean()
+            ) / 3
+        )
 
         # CHART
         fig = go.Figure()
@@ -123,26 +125,28 @@ if st.button("Go"):
                 line=dict(color="blue")
             )
         )
+
         # SUPPORT LINE
         fig.add_hline(
-          y=float(support),
-          line_dash="dot",
-          line_color="green"
+            y=support,
+            line_dash="dot",
+            line_color="green"
         )
 
         # RESISTANCE LINE
         fig.add_hline(
-          y=float(resistance),
-          line_dash="dot",
-          line_color="red"
+            y=resistance,
+            line_dash="dot",
+            line_color="red"
         )
 
         # PIVOT LINE
         fig.add_hline(
-          y=float(pivot),
-          line_dash="dash",
-          line_color="orange"
-       )
+            y=pivot,
+            line_dash="dash",
+            line_color="orange"
+        )
+
         # BREAKDOWN SIGNALS
         breakdown = data[data["Close"] < pivot]
 
@@ -168,6 +172,7 @@ if st.button("Go"):
                 name="Breakdown"
             )
         )
+
         # LAYOUT
         fig.update_layout(
             height=850,
