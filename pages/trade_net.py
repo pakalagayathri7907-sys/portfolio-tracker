@@ -76,6 +76,9 @@ if st.button("Go"):
         interval=interval,
         auto_adjust=True
     )
+    # REMOVE EMPTY VALUES
+    data = data.dropna()
+
 
     # CHECK EMPTY
     if data.empty:
