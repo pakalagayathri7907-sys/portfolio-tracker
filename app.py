@@ -7,8 +7,7 @@ from datetime import datetime
 
 
 st.set_page_config(layout="wide")
-from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=60000, key="datarefresh")
+
 
 
 st.title("Portfolio Tracker")
